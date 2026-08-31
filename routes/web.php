@@ -4,7 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvestigasiController;
-use App\Http\Controllers\ReferenceController;
+use App\Http\Controllers\SSOController;
+
+// Beri middleware 'auth' agar route ini hanya bisa diakses user yang sudah login di dashboard
+Route::get('/open-express', [SSOController::class, 'redirectToExpress'])->middleware('auth');
+
 
 
 /*
@@ -25,6 +29,8 @@ Route::post('/login', [AuthController::class, 'login'])
 
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
+
+Route::get('/open-express', [SSOController::class, 'redirectToExpress'])->middleware('auth');
 
 
 /*
