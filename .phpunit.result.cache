@@ -1,0 +1,1 @@
+{"version":2,"defects":{"Tests\\Feature\\InvestigasiPaginationTest::test_data_returns_paginated_results_with_ten_per_page":8},"times":{"Tests\\Feature\\InvestigasiPaginationTest::test_data_returns_paginated_results_with_ten_per_page":7.741}}

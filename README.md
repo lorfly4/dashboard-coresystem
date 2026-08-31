@@ -1,0 +1,487 @@
+<div align="center">
+
+# ⚙️ Deswa CoreSystem
+
+### Centralized System • Integrated Workflow • Better Management
+
+<p>
+  Sistem internal berbasis Laravel untuk mengelola layanan terintegrasi melalui
+  <strong>Single Sign-On Dashboard</strong> dan modul <strong>Pra Registrasi</strong>.
+</p>
+
+<p>
+  <img src="https://img.shields.io/badge/Laravel-Framework-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel">
+  <img src="https://img.shields.io/badge/PHP-Backend-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP">
+  <img src="https://img.shields.io/badge/MySQL-Database-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
+  <img src="https://img.shields.io/badge/Blade-Template-F7523F?style=for-the-badge&logo=laravel&logoColor=white" alt="Blade">
+  <img src="https://img.shields.io/badge/Status-Development-success?style=for-the-badge" alt="Development">
+</p>
+
+</div>
+
+---
+
+## ✨ Overview
+
+**Deswa CoreSystem** merupakan aplikasi web internal yang dirancang untuk menyederhanakan pengelolaan berbagai layanan dalam satu sistem terpusat.
+
+Pengguna dapat melakukan autentikasi melalui satu pintu, masuk ke **Dashboard SSO**, kemudian memilih aplikasi atau layanan yang dibutuhkan.
+
+Fokus pengembangan saat ini berada pada modul **Pra Registrasi**, yang digunakan untuk mengelola proses registrasi mulai dari pembuatan data hingga proses dinyatakan selesai.
+
+```text
+┌───────────────┐
+│     Login     │
+└───────┬───────┘
+        │
+        ▼
+┌───────────────────────┐
+│     Dashboard SSO     │
+└───────────┬───────────┘
+            │
+     ┌──────┼────────┬──────────────┐
+     ▼      ▼        ▼              ▼
+   RAISE    BO       SF      Pra Registrasi
+                                   │
+                                   ▼
+                            Kelola Registrasi
+                                   │
+                                   ▼
+                          Workflow & Monitoring
+```
+
+---
+
+## 🎯 Project Objectives
+
+Deswa CoreSystem dikembangkan untuk memberikan sistem yang:
+
+* Terpusat dan mudah diakses.
+* Mempermudah perpindahan antar layanan melalui SSO.
+* Mengurangi pengelolaan data secara manual.
+* Menjaga struktur data agar lebih konsisten.
+* Mempermudah monitoring proses Pra Registrasi.
+* Memberikan workflow yang jelas pada setiap data.
+* Meningkatkan efisiensi operasional internal.
+
+---
+
+## 🧩 Core Modules
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### 🔐 Authentication
+
+Sistem autentikasi digunakan sebagai gerbang utama sebelum pengguna dapat mengakses aplikasi.
+
+**Fitur:**
+
+* Login pengguna
+* Logout
+* Session authentication
+* Protected route
+* Authentication middleware
+* Redirect berdasarkan kondisi autentikasi
+
+</td>
+
+<td width="50%" valign="top">
+
+### 🧭 SSO Dashboard
+
+Dashboard utama yang digunakan sebagai pusat navigasi menuju layanan yang tersedia di dalam sistem.
+
+**Layanan:**
+
+* RAISE
+* BO
+* SF
+* Pra Registrasi
+
+</td>
+</tr>
+</table>
+
+---
+
+# 📋 Pra Registrasi
+
+Modul **Pra Registrasi** merupakan salah satu fitur utama Deswa CoreSystem.
+
+Modul ini memungkinkan pengguna melakukan pengelolaan data registrasi melalui sistem yang lebih terstruktur.
+
+### Fitur yang tersedia
+
+```text
+╭──────────────────────────────────────╮
+│         PRA REGISTRASI MODULE        │
+├──────────────────────────────────────┤
+│  ✦ Create Registration              │
+│  ✦ View Registration                │
+│  ✦ Registration Detail              │
+│  ✦ Update Registration              │
+│  ✦ Delete Registration              │
+│  ✦ Reference Data                   │
+│  ✦ Workflow Management              │
+│  ✦ Client Delivery Status           │
+╰──────────────────────────────────────╯
+```
+
+---
+
+## 🔄 Registration Workflow
+
+Setiap data Pra Registrasi memiliki workflow yang menggambarkan posisi data dalam proses registrasi.
+
+```text
+┌────────────┐
+│   DRAFT    │
+└─────┬──────┘
+      │
+      ▼
+┌────────────┐
+│  DIAJUKAN  │
+└─────┬──────┘
+      │
+      ▼
+┌──────────────┐
+│  DISETUJUI   │
+└──────┬───────┘
+       │
+       ▼
+┌────────────┐
+│  SELESAI   │
+└────────────┘
+```
+
+| Status          | Description                                                 |
+| :-------------- | :---------------------------------------------------------- |
+| 📝 **Draft**    | Data masih berada dalam proses pembuatan atau pengeditan    |
+| 📤 **Diajukan** | Data telah selesai dibuat dan diajukan ke proses berikutnya |
+| ✅ **Disetujui** | Data telah diperiksa dan mendapatkan persetujuan            |
+| 🏁 **Selesai**  | Seluruh proses Pra Registrasi telah diselesaikan            |
+
+---
+
+## 📦 Client Delivery Status
+
+Selain workflow utama, sistem juga memiliki status yang membantu pengguna mengetahui apakah data sudah dikirim kepada client.
+
+| Status               | Description                      |
+| :------------------- | :------------------------------- |
+| ⏳ **Belum Dikirim**  | Data belum dikirim kepada client |
+| 📬 **Sudah Dikirim** | Data telah dikirim kepada client |
+
+---
+
+## 🗂️ Reference Data
+
+Deswa CoreSystem menggunakan **Reference Data** untuk beberapa data yang digunakan berulang dalam sistem.
+
+Penggunaan reference data bertujuan untuk:
+
+* Menjaga konsistensi data.
+* Mengurangi kesalahan input.
+* Mengurangi input manual berulang.
+* Mempermudah maintenance data.
+* Membentuk relasi antar data dengan lebih terstruktur.
+
+---
+
+# 🛠️ Tech Stack
+
+<div align="center">
+
+|        Layer       | Technology                               |
+| :----------------: | :--------------------------------------- |
+|   ⚙️ **Backend**   | PHP • Laravel                            |
+|   🎨 **Frontend**  | Blade • HTML • CSS • JavaScript          |
+|  🗄️ **Database**  | MySQL                                    |
+|     🔗 **ORM**     | Laravel Eloquent                         |
+|  🛡️ **Security**  | CSRF • Validation • Middleware • Session |
+| 🔧 **Development** | Composer • Artisan • Git • GitHub        |
+
+</div>
+
+---
+
+## 🏗️ System Architecture
+
+```text
+                        ┌─────────────────┐
+                        │      USER       │
+                        └────────┬────────┘
+                                 │
+                                 ▼
+                        ┌─────────────────┐
+                        │ Authentication  │
+                        └────────┬────────┘
+                                 │
+                                 ▼
+                  ┌─────────────────────────────┐
+                  │        SSO DASHBOARD        │
+                  └──────────────┬──────────────┘
+                                 │
+          ┌──────────────────────┼────────────────────────┐
+          │                      │                        │
+          ▼                      ▼                        ▼
+      ┌───────┐              ┌───────┐             ┌───────────┐
+      │ RAISE │              │  BO   │             │    SF     │
+      └───────┘              └───────┘             └───────────┘
+                                 
+                                 │
+                                 ▼
+                    ┌─────────────────────────┐
+                    │     PRA REGISTRASI      │
+                    └────────────┬────────────┘
+                                 │
+                 ┌───────────────┼────────────────┐
+                 │               │                │
+                 ▼               ▼                ▼
+              Create           Detail            Edit
+                 │               │                │
+                 └───────────────┼────────────────┘
+                                 │
+                                 ▼
+                    ┌─────────────────────────┐
+                    │        WORKFLOW         │
+                    └────────────┬────────────┘
+                                 │
+                                 ▼
+                 Draft → Diajukan → Disetujui → Selesai
+```
+
+---
+
+# 🔒 Security
+
+Deswa CoreSystem menerapkan beberapa mekanisme keamanan bawaan dan praktik keamanan Laravel.
+
+### Authentication Security
+
+* Session-based authentication.
+* Authentication middleware.
+* Protected routes.
+* Guest restriction.
+
+### Request Security
+
+* CSRF protection.
+* Server-side validation.
+* Input validation.
+* Secure request handling.
+
+### Database Security
+
+* Eloquent ORM.
+* Query Builder.
+* Mass-assignment protection.
+* Environment-based database configuration.
+
+### Output Security
+
+Blade menggunakan escaped output:
+
+```php
+{{ $value }}
+```
+
+dibandingkan raw output:
+
+```php
+{!! $value !!}
+```
+
+untuk membantu mengurangi risiko output yang tidak aman.
+
+---
+
+# 🗃️ Feature Structure
+
+```text
+Deswa CoreSystem
+│
+├── 🔐 Authentication
+│   ├── Login
+│   ├── Logout
+│   ├── Session
+│   └── Middleware
+│
+├── 🧭 SSO Dashboard
+│   ├── RAISE
+│   ├── BO
+│   ├── SF
+│   └── Pra Registrasi
+│
+├── 📋 Pra Registrasi
+│   ├── List Data
+│   ├── Create
+│   ├── Detail
+│   ├── Update
+│   ├── Delete
+│   ├── Reference Data
+│   ├── Workflow
+│   └── Client Delivery Status
+│
+├── 🗄️ Database
+│   ├── Models
+│   ├── Relationships
+│   └── Reference Data
+│
+└── 🛡️ Security
+    ├── Authentication
+    ├── Authorization
+    ├── CSRF Protection
+    ├── Validation
+    └── Mass Assignment Protection
+```
+
+---
+
+# 🚀 Development Progress
+
+<div align="center">
+
+| Feature                | Status |
+| :--------------------- | :----: |
+| Authentication         |    ✅   |
+| Login & Logout         |    ✅   |
+| SSO Dashboard          |    ✅   |
+| Pra Registrasi         |    ✅   |
+| CRUD Pra Registrasi    |    ✅   |
+| Registration Detail    |    ✅   |
+| Reference Data         |    ✅   |
+| Registration Workflow  |    ✅   |
+| Client Delivery Status |    ✅   |
+| Database Integration   |    ✅   |
+| Protected Routes       |    ✅   |
+| Validation             |    ✅   |
+| Responsive UI          |   🚧   |
+| Advanced Monitoring    |   🚧   |
+
+</div>
+
+> `✅` Implemented    `🚧` Development / Improvement
+
+---
+
+# 🔮 Future Development
+
+Deswa CoreSystem masih dapat dikembangkan dengan beberapa fitur tambahan.
+
+```text
+✦ Role & Permission Management
+✦ User Management
+✦ Audit Log
+✦ Activity History
+✦ Approval History
+✦ Advanced Search
+✦ Dynamic Filter
+✦ Pagination
+✦ Export Data
+✦ Dashboard Analytics
+✦ Notification System
+✦ Integration Between SSO Applications
+```
+
+---
+
+## 💡 Development Principles
+
+Project dikembangkan dengan beberapa prinsip utama:
+
+> **Clean Code**
+> Struktur kode dibuat agar mudah dibaca, dikembangkan, dan dipelihara.
+
+> **Security First**
+> Authentication, validation, CSRF protection, dan database security menjadi bagian penting dalam pengembangan.
+
+> **Maintainability**
+> Struktur aplikasi dibuat modular sehingga fitur baru dapat dikembangkan tanpa mengganggu fitur utama.
+
+> **User Experience**
+> Interface dikembangkan agar proses bisnis dapat dilakukan dengan sederhana dan efisien.
+
+---
+
+# 📌 Project Highlights
+
+<table>
+<tr>
+<td align="center" width="25%">
+
+### 🔐
+
+**Secure**
+
+Authentication & protected application routes.
+
+</td>
+
+<td align="center" width="25%">
+
+### ⚡
+
+**Efficient**
+
+Centralized access melalui SSO Dashboard.
+
+</td>
+
+<td align="center" width="25%">
+
+### 🔄
+
+**Integrated**
+
+Workflow registrasi yang terstruktur.
+
+</td>
+
+<td align="center" width="25%">
+
+### 📊
+
+**Scalable**
+
+Siap dikembangkan untuk modul dan fitur lainnya.
+
+</td>
+</tr>
+</table>
+
+---
+
+## 👨‍💻 Developer
+
+Project ini dikembangkan sebagai bagian dari pengembangan sistem berbasis web menggunakan **Laravel dan MySQL**.
+
+Fokus pengembangan mencakup:
+
+* Backend development
+* Database integration
+* Authentication
+* CRUD operations
+* Workflow implementation
+* Frontend integration
+* Application security
+
+---
+
+<div align="center">
+
+## ⚙️ Deswa CoreSystem
+
+**Centralized System. Integrated Workflow. Better Management.**
+
+<br>
+
+`Laravel` • `PHP` • `MySQL` • `Blade` • `JavaScript`
+
+<br>
+
+⭐ **Built with Laravel**
+
+</div>
