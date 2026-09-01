@@ -14,7 +14,9 @@ class AdminMiddleware
             return redirect()->route('login');
         }
 
-        if (auth()->user()->role !== 'admin') {
+        $role = strtolower((string) auth()->user()->role);
+
+        if (!in_array($role, ['spv', 'master'], true)) {
             abort(403, 'Anda tidak memiliki akses.');
         }
 

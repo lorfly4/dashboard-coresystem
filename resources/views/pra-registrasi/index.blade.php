@@ -1417,6 +1417,7 @@
                         <th>No Case</th>
                         <th>Number Case</th>
                         <th>Tanggal Registrasi</th>
+                        <th>Tgl Kirim Laporan</th>
                         <th>No Polis</th>
                         <th>Tertanggung</th>
                         <th>Status</th>
@@ -1478,16 +1479,9 @@
                 <div class="form-grid">
 
                     <div class="form-group">
-                        <label>No Case</label>
-
-                        <input type="text" name="no_case" class="form-control" placeholder="Contoh: CASE-001">
-                    </div>
-
-
-                    <div class="form-group">
                         <label>Number Case</label>
 
-                        <input type="number" name="number_case" class="form-control" placeholder="Contoh: 1">
+                        <input type="text" name="number_case" class="form-control" placeholder="Contoh: 1">
                     </div>
 
 
@@ -1495,6 +1489,12 @@
                         <label>Tanggal Registrasi</label>
 
                         <input type="date" name="tgl_registrasi" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tanggal Kirim Laporan</label>
+
+                        <input type="date" name="tgl_kirim_laporan" class="form-control">
                     </div>
 
 
@@ -1673,12 +1673,12 @@
             <form id="editForm">
                 <input type="hidden" id="editId">
                 <div class="form-grid">
-                    <div class="form-group"><label>No Case</label><input type="text" name="no_case" id="edit_no_case"
-                            class="form-control"></div>
                     <div class="form-group"><label>Number Case</label><input type="number" name="number_case"
                             id="edit_number_case" class="form-control"></div>
                     <div class="form-group"><label>Tanggal Registrasi</label><input type="date" name="tgl_registrasi"
                             id="edit_tgl_registrasi" class="form-control"></div>
+                    <div class="form-group"><label>Tanggal Kirim Laporan</label><input type="date" name="tgl_kirim_laporan"
+                            id="edit_tgl_kirim_laporan" class="form-control"></div>
                     <div class="form-group"><label>No Polis</label><input type="text" name="no_polis" id="edit_no_polis"
                             class="form-control"></div>
                     <div class="form-group"><label>Nama Tertanggung</label><input type="text" name="nm_tertanggung"
@@ -1946,12 +1946,9 @@
                 return 'Draft';
 
             case 1:
-                return 'Diajukan';
+                return 'Approve / Done';
 
             case 2:
-                return 'Disetujui';
-
-            case 3:
                 return 'Selesai';
 
             default:
@@ -2100,6 +2097,10 @@
                     </td>
 
                     <td>
+                        ${item.tgl_kirim_laporan ?? '-'}
+                    </td>
+
+                    <td>
                         ${escapeHtml(item.no_polis ?? '-')}
                     </td>
 
@@ -2142,18 +2143,19 @@
                                         <button class="btn-sm btn-edit" onclick="openEdit(${item.id})">Edit</button>
                                         <button class="btn-sm btn-delete" onclick="deleteData(${item.id})">Hapus</button>
                                         <button class="btn-sm btn-submit" onclick="submitData(${item.id})">Ajukan</button>
+                                        <button class="btn-sm btn-approve" onclick="approveData(${item.id})">Approve</button>
                                     `
-                                    : Number(item.status) === 1
+                                    : Number(item.status) === 1 && Number(item.status_sent_client) === 0
                                         ? `
-                                            <button class="btn-sm btn-approve" onclick="approveData(${item.id})">Approve</button>
+                                            <button class="btn-sm btn-send" onclick="sendClientData(${item.id})">Kirim Client</button>
                                         `
-                                        : Number(item.status) === 2 && Number(item.status_sent_client) === 0
+                                        : Number(item.status) === 1 && Number(item.status_sent_client) === 1
                                             ? `
-                                                <button class="btn-sm btn-send" onclick="sendClientData(${item.id})">Kirim Client</button>
+                                                <button class="btn-sm btn-complete" onclick="completeData(${item.id})">Selesaikan</button>
                                             `
-                                            : Number(item.status) === 2 && Number(item.status_sent_client) === 1
+                                            : Number(item.status) === 2
                                                 ? `
-                                                    <button class="btn-sm btn-complete" onclick="completeData(${item.id})">Selesaikan</button>
+                                                    <button class="btn-sm btn-complete" onclick="completeData(${item.id})">Selesai</button>
                                                 `
                                                 : ''
                             }
@@ -2248,6 +2250,9 @@
     const createForm =
         document.getElementById('createForm');
 
+    const createAsuransiSelect =
+        document.getElementById('create_asuransi_id');
+
     const openCreateModal =
         document.getElementById('openCreateModal');
 
@@ -2276,9 +2281,43 @@
     }
 
 
+    async function refreshNextNumberCase() {
+        // number_case sekarang berupa counter global (mengikuti logic
+        // InvestigasiControllerraise.php), jadi tidak lagi difilter
+        // berdasarkan asuransi_id.
+        const numberCaseInput = createForm.querySelector('input[name="number_case"]');
+        if (!numberCaseInput) return;
+
+        try {
+            const url = new URL('{{ route('pra-registrasi.next-number-case') }}', window.location.origin);
+
+            const response = await fetch(url.toString(), {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': CSRF_TOKEN
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Gagal mengambil nomor case berikutnya.');
+            }
+
+            const result = await response.json();
+            const nextNumber = Number(result?.data?.number_case ?? 1);
+            numberCaseInput.value = Number.isFinite(nextNumber) ? nextNumber : 1;
+        } catch (error) {
+            console.error(error);
+            numberCaseInput.value = '';
+        }
+    }
+
     openCreateModal.addEventListener(
         'click',
-        openModal
+        function () {
+            openModal();
+            refreshNextNumberCase();
+        }
     );
 
 
@@ -2546,6 +2585,7 @@
                 ['No Case', item.no_case],
                 ['Number Case', item.number_case],
                 ['Tanggal Registrasi', item.tgl_registrasi],
+                ['Tanggal Kirim Laporan', item.tgl_kirim_laporan],
                 ['No Polis', item.no_polis],
                 ['Nama Tertanggung', item.nm_tertanggung],
                 ['Pemegang Polis', item.nm_pemegang_polis],
@@ -2582,9 +2622,9 @@
             }
 
             document.getElementById('editId').value = item.id;
-            document.getElementById('edit_no_case').value = item.no_case ?? '';
             document.getElementById('edit_number_case').value = item.number_case ?? '';
             document.getElementById('edit_tgl_registrasi').value = item.tgl_registrasi ?? '';
+            document.getElementById('edit_tgl_kirim_laporan').value = item.tgl_kirim_laporan ?? '';
             document.getElementById('edit_no_polis').value = item.no_polis ?? '';
             document.getElementById('edit_nm_tertanggung').value = item.nm_tertanggung ?? '';
             document.getElementById('edit_nm_pemegang_polis').value = item.nm_pemegang_polis ?? '';

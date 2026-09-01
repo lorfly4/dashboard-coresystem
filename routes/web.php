@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvestigasiController;
+use App\Http\Controllers\ReferenceController;
 use App\Http\Controllers\SSOController;
 
 // Beri middleware 'auth' agar route ini hanya bisa diakses user yang sudah login di dashboard
@@ -108,6 +109,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/pra-registrasi/data', [InvestigasiController::class, 'data'])
         ->name('pra-registrasi.data');
+
+    Route::get('/pra-registrasi/next-number-case', [InvestigasiController::class, 'nextNumberCase'])
+        ->name('pra-registrasi.next-number-case');
 
 
     /*

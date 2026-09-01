@@ -13,6 +13,11 @@ class Investigasi extends Model
         'no_case',
         'number_case',
         'tgl_registrasi',
+        'tgl_kirim_laporan',
+        'alamat_provinsi',
+        'alamat_kabupaten',
+        'alamat_kecamatan',
+        'usia_polis',
 
         // Polis
         'no_polis',
@@ -25,11 +30,18 @@ class Investigasi extends Model
         'premi',
         'total_premi',
         'jml_klaim',
+        'investigasi_fee',
 
         // Tanggal polis
         'tgl_spaj',
         'tgl_efektif_polis',
         'tgl_joint',
+        'tgl_kirim_dokumen',
+        'tambahan_waktu',
+        'tgl_mulai',
+        'tgl_pengajuan',
+        'tgl_selesai',
+        'tgl_klaim',
 
         // Informasi klaim
         'tgl_meninggal',
@@ -41,6 +53,8 @@ class Investigasi extends Model
         'jenisclaim_id',
         'investigator_id',
         'matauang',
+        'provinsi',
+        'kepemilikan_asuransi_lain',
 
         // Informasi tambahan
         'tempat_meninggal',
@@ -55,6 +69,8 @@ class Investigasi extends Model
         'metode_investigasi',
         'agen_terlibat',
         'plan',
+        'nama_peserta',
+        'nomor_peserta',
 
         // Dikontrol backend
         'user_id',
