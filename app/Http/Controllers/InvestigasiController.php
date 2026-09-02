@@ -71,7 +71,7 @@ class InvestigasiController extends Controller
 
         $investigasi = new Investigasi();
 
-        $investigasi->no_case = $this->generateNoCase($asuransiId);
+        $investigasi->no_case = $this->generateNoCase($asuransiId, $numberCase);
         $investigasi->number_case = $numberCase;
         $investigasi->tgl_registrasi = $request->input('tgl_registrasi');
         $investigasi->tgl_kirim_laporan = $request->input('tgl_kirim_laporan');
@@ -87,7 +87,6 @@ class InvestigasiController extends Controller
         $investigasi->alamat_tertanggung = $request->input('alamat_tertanggung');
         $investigasi->tgl_spaj = $request->input('tgl_spaj');
         $investigasi->tgl_efektif_polis = $request->input('tgl_efektif_polis');
-        $investigasi->tgl_joint = $request->input('tgl_joint');
         $investigasi->usia_polis = $request->input('usia_polis');
         $investigasi->pekerjaan = $request->input('pekerjaan');
         $investigasi->matauang = $request->input('matauang');
@@ -113,12 +112,6 @@ class InvestigasiController extends Controller
         $investigasi->kronologi_singkat = $request->input('kronologi_singkat');
         $investigasi->metode_investigasi = $request->input('metode_investigasi');
         $investigasi->agen_terlibat = $request->input('agen_terlibat');
-        $investigasi->nama_peserta = $request->input('nama_peserta');
-        $investigasi->nomor_peserta = $request->input('nomor_peserta');
-        $investigasi->tgl_mulai = $request->input('tgl_mulai');
-        $investigasi->tgl_pengajuan = $request->input('tgl_pengajuan');
-        $investigasi->tgl_selesai = $request->input('tgl_selesai');
-        $investigasi->tgl_klaim = $request->input('tgl_klaim');
         $investigasi->plan = $request->input('plan');
         $investigasi->status = 0;
         $investigasi->status_sent_client = 0;
@@ -329,35 +322,28 @@ class InvestigasiController extends Controller
     }
 
     /**
-     * Generate nomor case otomatis berdasarkan data terakhir.
+     * Generate nomor case (sequence) otomatis.
      *
-     * Mengikuti logic InvestigasiControllerraise.php: number_case adalah
-     * counter global (MAX dari seluruh data investigasis), tidak dipisah
-     * per asuransi.
+     * Sequence = jumlah total data investigasi yang sudah ada + 1
+     * (COUNT(*), bukan berdasarkan id ataupun MAX(number_case)), dan
+     * berlaku global untuk semua asuransi.
      */
     public function generateNumberCase(): int
     {
-        $numbercase = DB::table('investigasis')
-            ->select('investigasis.number_case')
-            ->orderBy('number_case', 'desc')
-            ->first();
+        $totalData = DB::table('investigasis')->count();
 
-        if (empty($numbercase)) {
-            return 1;
-        }
-
-        return (int) $numbercase->number_case + 1;
+        return $totalData + 1;
     }
 
     /**
      * Generate no_case otomatis.
      *
-     * Mengikuti logic generateNo() di registrasi_blade.php (raise):
-     * prefix diambil dari kd_perusahaan asuransi, diikuti bulan.tahun,
-     * TANPA nomor urut ditempel di belakang.
-     * Format: {KD_PERUSAHAAN}/{BULAN}.{TAHUN}/
+     * Format: {KD_PERUSAHAAN}/{BULAN}.{TAHUN}/{SEQUENCE}
+     * - Prefix diambil dari kd_perusahaan asuransi.
+     * - Sequence adalah nomor urut dari generateNumberCase() (jumlah data + 1),
+     *   ditempel di paling belakang.
      */
-    public function generateNoCase($asuransiId = null): string
+    public function generateNoCase($asuransiId = null, int $numberCase = 1): string
     {
         $prefix = 'ASURANSI';
 
@@ -372,7 +358,7 @@ class InvestigasiController extends Controller
         $month = date('n');
         $year = date('Y');
 
-        return sprintf('%s/%s.%s/', $prefix, $month, $year);
+        return sprintf('%s/%s.%s/%d', $prefix, $month, $year, $numberCase);
     }
 
     public function nextNumberCase(Request $request)
@@ -399,7 +385,7 @@ class InvestigasiController extends Controller
             'alamat_provinsi' => 'nullable|string|max:255',
             'alamat_kabupaten' => 'nullable|string|max:255',
             'alamat_kecamatan' => 'nullable|string|max:255',
-            'usia_polis' => 'nullable|integer',
+            'usia_polis' => 'nullable|string|max:191',
 
             // Polis
             'no_polis' => 'nullable|string|max:255',
@@ -417,13 +403,8 @@ class InvestigasiController extends Controller
             // Tanggal polis
             'tgl_spaj' => 'nullable|date',
             'tgl_efektif_polis' => 'nullable|date',
-            'tgl_joint' => 'nullable|date',
             'tgl_kirim_dokumen' => 'nullable|date',
-            'tambahan_waktu' => 'nullable|integer',
-            'tgl_mulai' => 'nullable|date',
-            'tgl_pengajuan' => 'nullable|date',
-            'tgl_selesai' => 'nullable|date',
-            'tgl_klaim' => 'nullable|date',
+            'tambahan_waktu' => 'nullable|string',
 
             // Informasi meninggal / klaim
             'tgl_meninggal' => 'nullable|date',
@@ -446,13 +427,11 @@ class InvestigasiController extends Controller
             'alamat_tertanggung' => 'nullable|string',
             'pekerjaan' => 'nullable|string|max:255',
             'informasi_lain' => 'nullable|string',
-            'pengaju_klaim' => 'nullable|string|max:255',
+            'pengaju_klaim' => 'nullable|string|max:50',
             'kronologi_singkat' => 'nullable|string',
-            'metode_investigasi' => 'nullable|string|max:255',
-            'agen_terlibat' => 'nullable|string|max:255',
-            'plan' => 'nullable|string|max:255',
-            'nama_peserta' => 'nullable|string|max:255',
-            'nomor_peserta' => 'nullable|string|max:255',
+            'metode_investigasi' => 'nullable|string',
+            'agen_terlibat' => 'nullable|string|max:50',
+            'plan' => 'nullable|string',
         ];
     }
 }

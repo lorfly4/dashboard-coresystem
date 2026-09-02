@@ -1598,6 +1598,132 @@
                     </div>
 
 
+                    <div class="form-group">
+                        <label>Usia Polis</label>
+
+                        <input type="text" name="usia_polis" class="form-control" placeholder="Contoh: 19 bulan">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Tanggal SPAJ</label>
+
+                        <input type="date" name="tgl_spaj" class="form-control">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Tanggal Efektif Polis</label>
+
+                        <input type="date" name="tgl_efektif_polis" class="form-control">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Provinsi (Alamat)</label>
+
+                        <input type="text" name="alamat_provinsi" class="form-control">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Kabupaten (Alamat)</label>
+
+                        <input type="text" name="alamat_kabupaten" class="form-control">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Kecamatan (Alamat)</label>
+
+                        <input type="text" name="alamat_kecamatan" class="form-control">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Provinsi</label>
+
+                        <input type="text" name="provinsi" class="form-control">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Area Investigasi</label>
+
+                        <input type="text" name="area_investigasi" class="form-control">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Rumah Sakit</label>
+
+                        <input type="text" name="rumah_sakit" class="form-control">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Diagnosa Utama</label>
+
+                        <input type="text" name="diagnosa_utama" class="form-control">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Tempat Meninggal</label>
+
+                        <input type="text" name="tempat_meninggal" class="form-control">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Tanggal Meninggal</label>
+
+                        <input type="date" name="tgl_meninggal" class="form-control">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Tanggal Dirawat Dokter</label>
+
+                        <input type="date" name="tgl_dirawat_dr" class="form-control">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Tanggal Dirawat Sampai</label>
+
+                        <input type="date" name="tgl_dirawat_smp" class="form-control">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Kepemilikan Asuransi Lain</label>
+
+                        <input type="text" name="kepemilikan_asuransi_lain" class="form-control">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Investigasi Fee</label>
+
+                        <input type="number" name="investigasi_fee" class="form-control" placeholder="0">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Tanggal Kirim Dokumen</label>
+
+                        <input type="date" name="tgl_kirim_dokumen" class="form-control">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>Agen Terlibat</label>
+
+                        <input type="text" name="agen_terlibat" class="form-control">
+                    </div>
+
+
                     <div class="form-group full">
                         <label>Alamat Tertanggung</label>
 
@@ -1616,6 +1742,27 @@
                         <label>Kronologi Singkat</label>
 
                         <textarea name="kronologi_singkat" class="form-control"></textarea>
+                    </div>
+
+
+                    <div class="form-group full">
+                        <label>Metode Investigasi</label>
+
+                        <textarea name="metode_investigasi" class="form-control"></textarea>
+                    </div>
+
+
+                    <div class="form-group full">
+                        <label>Tambahan Waktu</label>
+
+                        <textarea name="tambahan_waktu" class="form-control" placeholder="Keterangan tambahan waktu SLA"></textarea>
+                    </div>
+
+
+                    <div class="form-group full">
+                        <label>Plan</label>
+
+                        <textarea name="plan" class="form-control"></textarea>
                     </div>
 
                 </div>
@@ -1711,12 +1858,66 @@
                             <option value="">Pilih Mata Uang</option>
                         </select>
                     </div>
+                    <div class="form-group"><label>Uang Pertanggungan</label><input type="number"
+                            name="uang_pertanggungan" id="edit_uang_pertanggungan" class="form-control"></div>
+                    <div class="form-group"><label>Premi</label><input type="number" name="premi" id="edit_premi"
+                            class="form-control"></div>
+                    <div class="form-group"><label>Total Premi</label><input type="number" name="total_premi"
+                            id="edit_total_premi" class="form-control"></div>
+                    <div class="form-group"><label>Jumlah Klaim</label><input type="number" name="jml_klaim"
+                            id="edit_jml_klaim" class="form-control"></div>
+                    <div class="form-group"><label>Pekerjaan</label><input type="text" name="pekerjaan"
+                            id="edit_pekerjaan" class="form-control"></div>
+                    <div class="form-group"><label>Pengaju Klaim</label><input type="text" name="pengaju_klaim"
+                            id="edit_pengaju_klaim" class="form-control"></div>
+                    <div class="form-group"><label>Usia Polis</label><input type="text" name="usia_polis"
+                            id="edit_usia_polis" class="form-control"></div>
+                    <div class="form-group"><label>Tanggal SPAJ</label><input type="date" name="tgl_spaj"
+                            id="edit_tgl_spaj" class="form-control"></div>
+                    <div class="form-group"><label>Tanggal Efektif Polis</label><input type="date"
+                            name="tgl_efektif_polis" id="edit_tgl_efektif_polis" class="form-control"></div>
+                    <div class="form-group"><label>Provinsi (Alamat)</label><input type="text" name="alamat_provinsi"
+                            id="edit_alamat_provinsi" class="form-control"></div>
+                    <div class="form-group"><label>Kabupaten (Alamat)</label><input type="text"
+                            name="alamat_kabupaten" id="edit_alamat_kabupaten" class="form-control"></div>
+                    <div class="form-group"><label>Kecamatan (Alamat)</label><input type="text"
+                            name="alamat_kecamatan" id="edit_alamat_kecamatan" class="form-control"></div>
+                    <div class="form-group"><label>Provinsi</label><input type="text" name="provinsi"
+                            id="edit_provinsi" class="form-control"></div>
+                    <div class="form-group"><label>Area Investigasi</label><input type="text" name="area_investigasi"
+                            id="edit_area_investigasi" class="form-control"></div>
+                    <div class="form-group"><label>Rumah Sakit</label><input type="text" name="rumah_sakit"
+                            id="edit_rumah_sakit" class="form-control"></div>
+                    <div class="form-group"><label>Diagnosa Utama</label><input type="text" name="diagnosa_utama"
+                            id="edit_diagnosa_utama" class="form-control"></div>
+                    <div class="form-group"><label>Tempat Meninggal</label><input type="text" name="tempat_meninggal"
+                            id="edit_tempat_meninggal" class="form-control"></div>
+                    <div class="form-group"><label>Tanggal Meninggal</label><input type="date" name="tgl_meninggal"
+                            id="edit_tgl_meninggal" class="form-control"></div>
+                    <div class="form-group"><label>Tanggal Dirawat Dokter</label><input type="date"
+                            name="tgl_dirawat_dr" id="edit_tgl_dirawat_dr" class="form-control"></div>
+                    <div class="form-group"><label>Tanggal Dirawat Sampai</label><input type="date"
+                            name="tgl_dirawat_smp" id="edit_tgl_dirawat_smp" class="form-control"></div>
+                    <div class="form-group"><label>Kepemilikan Asuransi Lain</label><input type="text"
+                            name="kepemilikan_asuransi_lain" id="edit_kepemilikan_asuransi_lain" class="form-control"></div>
+                    <div class="form-group"><label>Investigasi Fee</label><input type="number" name="investigasi_fee"
+                            id="edit_investigasi_fee" class="form-control"></div>
+                    <div class="form-group"><label>Tanggal Kirim Dokumen</label><input type="date"
+                            name="tgl_kirim_dokumen" id="edit_tgl_kirim_dokumen" class="form-control"></div>
+                    <div class="form-group"><label>Agen Terlibat</label><input type="text" name="agen_terlibat"
+                            id="edit_agen_terlibat" class="form-control"></div>
                     <div class="form-group full"><label>Alamat Tertanggung</label><textarea name="alamat_tertanggung"
                             id="edit_alamat_tertanggung" class="form-control"></textarea></div>
                     <div class="form-group full"><label>Informasi Lain</label><textarea name="informasi_lain"
                             id="edit_informasi_lain" class="form-control"></textarea></div>
                     <div class="form-group full"><label>Kronologi Singkat</label><textarea name="kronologi_singkat"
                             id="edit_kronologi_singkat" class="form-control"></textarea></div>
+                    <div class="form-group full"><label>Metode Investigasi</label><textarea name="metode_investigasi"
+                            id="edit_metode_investigasi" class="form-control"></textarea></div>
+                    <div class="form-group full"><label>Tambahan Waktu</label><textarea name="tambahan_waktu"
+                            id="edit_tambahan_waktu" class="form-control"></textarea></div>
+                    <div class="form-group full"><label>Plan</label><textarea name="plan" id="edit_plan"
+                            class="form-control"></textarea></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="cancelEdit">Batal</button>
@@ -2590,16 +2791,48 @@
                 ['Nama Tertanggung', item.nm_tertanggung],
                 ['Pemegang Polis', item.nm_pemegang_polis],
                 ['Nama Agen', item.nm_agen],
+                ['Uang Pertanggungan', item.uang_pertanggungan],
+                ['Premi', item.premi],
+                ['Total Premi', item.total_premi],
+                ['Jumlah Klaim', item.jml_klaim],
                 ['Mata Uang', item.matauang],
+                ['Pekerjaan', item.pekerjaan],
+                ['Pengaju Klaim', item.pengaju_klaim],
+                ['Usia Polis', item.usia_polis],
+                ['Tanggal SPAJ', item.tgl_spaj],
+                ['Tanggal Efektif Polis', item.tgl_efektif_polis],
+                ['Provinsi (Alamat)', item.alamat_provinsi],
+                ['Kabupaten (Alamat)', item.alamat_kabupaten],
+                ['Kecamatan (Alamat)', item.alamat_kecamatan],
+                ['Provinsi', item.provinsi],
+                ['Area Investigasi', item.area_investigasi],
+                ['Rumah Sakit', item.rumah_sakit],
+                ['Diagnosa Utama', item.diagnosa_utama],
+                ['Tempat Meninggal', item.tempat_meninggal],
+                ['Tanggal Meninggal', item.tgl_meninggal],
+                ['Tanggal Dirawat Dokter', item.tgl_dirawat_dr],
+                ['Tanggal Dirawat Sampai', item.tgl_dirawat_smp],
+                ['Kepemilikan Asuransi Lain', item.kepemilikan_asuransi_lain],
+                ['Investigasi Fee', item.investigasi_fee],
+                ['Tanggal Kirim Dokumen', item.tgl_kirim_dokumen],
+                ['Agen Terlibat', item.agen_terlibat],
                 ['Status', statusLabel(item.status)],
                 ['Kirim Client', Number(item.status_sent_client) === 1 ? 'Sudah dikirim' : 'Belum dikirim'],
                 ['Alamat Tertanggung', item.alamat_tertanggung],
                 ['Informasi Lain', item.informasi_lain],
-                ['Kronologi Singkat', item.kronologi_singkat]
+                ['Kronologi Singkat', item.kronologi_singkat],
+                ['Metode Investigasi', item.metode_investigasi],
+                ['Tambahan Waktu', item.tambahan_waktu],
+                ['Plan', item.plan]
+            ];
+
+            const fullWidthLabels = [
+                'Alamat Tertanggung', 'Informasi Lain', 'Kronologi Singkat',
+                'Metode Investigasi', 'Tambahan Waktu', 'Plan'
             ];
 
             content.innerHTML = fields.map(([label, value]) => `
-                <div class="detail-item ${['Alamat Tertanggung','Informasi Lain','Kronologi Singkat'].includes(label) ? 'full' : ''}">
+                <div class="detail-item ${fullWidthLabels.includes(label) ? 'full' : ''}">
                     <strong>${escapeHtml(label)}</strong>
                     <span>${escapeHtml(value ?? '-')}</span>
                 </div>
@@ -2640,6 +2873,34 @@
             document.getElementById('edit_alamat_tertanggung').value = item.alamat_tertanggung ?? '';
             document.getElementById('edit_informasi_lain').value = item.informasi_lain ?? '';
             document.getElementById('edit_kronologi_singkat').value = item.kronologi_singkat ?? '';
+
+            document.getElementById('edit_uang_pertanggungan').value = item.uang_pertanggungan ?? '';
+            document.getElementById('edit_premi').value = item.premi ?? '';
+            document.getElementById('edit_total_premi').value = item.total_premi ?? '';
+            document.getElementById('edit_jml_klaim').value = item.jml_klaim ?? '';
+            document.getElementById('edit_pekerjaan').value = item.pekerjaan ?? '';
+            document.getElementById('edit_pengaju_klaim').value = item.pengaju_klaim ?? '';
+            document.getElementById('edit_usia_polis').value = item.usia_polis ?? '';
+            document.getElementById('edit_tgl_spaj').value = item.tgl_spaj ?? '';
+            document.getElementById('edit_tgl_efektif_polis').value = item.tgl_efektif_polis ?? '';
+            document.getElementById('edit_alamat_provinsi').value = item.alamat_provinsi ?? '';
+            document.getElementById('edit_alamat_kabupaten').value = item.alamat_kabupaten ?? '';
+            document.getElementById('edit_alamat_kecamatan').value = item.alamat_kecamatan ?? '';
+            document.getElementById('edit_provinsi').value = item.provinsi ?? '';
+            document.getElementById('edit_area_investigasi').value = item.area_investigasi ?? '';
+            document.getElementById('edit_rumah_sakit').value = item.rumah_sakit ?? '';
+            document.getElementById('edit_diagnosa_utama').value = item.diagnosa_utama ?? '';
+            document.getElementById('edit_tempat_meninggal').value = item.tempat_meninggal ?? '';
+            document.getElementById('edit_tgl_meninggal').value = item.tgl_meninggal ?? '';
+            document.getElementById('edit_tgl_dirawat_dr').value = item.tgl_dirawat_dr ?? '';
+            document.getElementById('edit_tgl_dirawat_smp').value = item.tgl_dirawat_smp ?? '';
+            document.getElementById('edit_kepemilikan_asuransi_lain').value = item.kepemilikan_asuransi_lain ?? '';
+            document.getElementById('edit_investigasi_fee').value = item.investigasi_fee ?? '';
+            document.getElementById('edit_tgl_kirim_dokumen').value = item.tgl_kirim_dokumen ?? '';
+            document.getElementById('edit_agen_terlibat').value = item.agen_terlibat ?? '';
+            document.getElementById('edit_metode_investigasi').value = item.metode_investigasi ?? '';
+            document.getElementById('edit_tambahan_waktu').value = item.tambahan_waktu ?? '';
+            document.getElementById('edit_plan').value = item.plan ?? '';
 
             document.getElementById('editErrors').classList.remove('active');
             openOverlay(editModal);
