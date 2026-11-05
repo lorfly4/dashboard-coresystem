@@ -37,6 +37,16 @@ class ReferenceController extends Controller
             ->orderBy('matauang')
             ->get();
 
+        $users = DB::table('users')
+            ->select(
+                'id',
+                'name',
+                'role'
+            )
+            ->whereRaw('LOWER(role) = ?', ['user'])
+            ->orderBy('id')
+            ->get();
+
         return response()->json([
             'success' => true,
             'data' => [
@@ -44,6 +54,7 @@ class ReferenceController extends Controller
                 'jenis_claims' => $jenisClaims,
                 'investigators' => $investigators,
                 'matauangs' => $matauangs,
+                'users' => $users,
             ],
         ]);
     }

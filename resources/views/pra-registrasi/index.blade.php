@@ -1422,6 +1422,7 @@
                         <th>Tertanggung</th>
                         <th>Status</th>
                         <th>Kirim Client</th>
+                        <th>Temuan</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -1528,6 +1529,13 @@
 
 
                     <div class="form-group">
+                        <label>PIC</label>
+                        <select name="pic" id="create_pic" class="form-control">
+                            <option value="">Pilih PIC</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
                         <label>Asuransi</label>
                         <select name="asuransi_id" id="create_asuransi_id" class="form-control">
                             <option value="">Pilih Asuransi</option>
@@ -1622,21 +1630,27 @@
                     <div class="form-group">
                         <label>Provinsi (Alamat)</label>
 
-                        <input type="text" name="alamat_provinsi" class="form-control">
+                        <select name="alamat_provinsi" id="create_alamat_provinsi" class="form-control" disabled>
+                            <option value="">Memuat provinsi...</option>
+                        </select>
                     </div>
 
 
                     <div class="form-group">
-                        <label>Kabupaten (Alamat)</label>
+                        <label>Kota/Kabupaten (Alamat)</label>
 
-                        <input type="text" name="alamat_kabupaten" class="form-control">
+                        <select name="alamat_kabupaten" id="create_alamat_kabupaten" class="form-control" disabled>
+                            <option value="">Pilih provinsi terlebih dahulu</option>
+                        </select>
                     </div>
 
 
                     <div class="form-group">
                         <label>Kecamatan (Alamat)</label>
 
-                        <input type="text" name="alamat_kecamatan" class="form-control">
+                        <select name="alamat_kecamatan" id="create_alamat_kecamatan" class="form-control" disabled>
+                            <option value="">Pilih kota/kabupaten terlebih dahulu</option>
+                        </select>
                     </div>
 
 
@@ -1835,6 +1849,12 @@
                     <div class="form-group"><label>Nama Agen</label><input type="text" name="nm_agen" id="edit_nm_agen"
                             class="form-control"></div>
                     <div class="form-group">
+                        <label>PIC</label>
+                        <select name="pic" id="edit_pic" class="form-control">
+                            <option value="">Pilih PIC</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Asuransi</label>
                         <select name="asuransi_id" id="edit_asuransi_id" class="form-control">
                             <option value="">Pilih Asuransi</option>
@@ -1876,12 +1896,21 @@
                             id="edit_tgl_spaj" class="form-control"></div>
                     <div class="form-group"><label>Tanggal Efektif Polis</label><input type="date"
                             name="tgl_efektif_polis" id="edit_tgl_efektif_polis" class="form-control"></div>
-                    <div class="form-group"><label>Provinsi (Alamat)</label><input type="text" name="alamat_provinsi"
-                            id="edit_alamat_provinsi" class="form-control"></div>
-                    <div class="form-group"><label>Kabupaten (Alamat)</label><input type="text"
-                            name="alamat_kabupaten" id="edit_alamat_kabupaten" class="form-control"></div>
-                    <div class="form-group"><label>Kecamatan (Alamat)</label><input type="text"
-                            name="alamat_kecamatan" id="edit_alamat_kecamatan" class="form-control"></div>
+                    <div class="form-group"><label>Provinsi (Alamat)</label>
+                        <select name="alamat_provinsi" id="edit_alamat_provinsi" class="form-control" disabled>
+                            <option value="">Memuat provinsi...</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Kota/Kabupaten (Alamat)</label>
+                        <select name="alamat_kabupaten" id="edit_alamat_kabupaten" class="form-control" disabled>
+                            <option value="">Pilih provinsi terlebih dahulu</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Kecamatan (Alamat)</label>
+                        <select name="alamat_kecamatan" id="edit_alamat_kecamatan" class="form-control" disabled>
+                            <option value="">Pilih kota/kabupaten terlebih dahulu</option>
+                        </select>
+                    </div>
                     <div class="form-group"><label>Provinsi</label><input type="text" name="provinsi"
                             id="edit_provinsi" class="form-control"></div>
                     <div class="form-group"><label>Area Investigasi</label><input type="text" name="area_investigasi"
@@ -2029,11 +2058,199 @@
     const APPROVE_URL_TEMPLATE = "{{ route('pra-registrasi.approve', ['investigasi' => '__ID__']) }}";
     const SEND_CLIENT_URL_TEMPLATE = "{{ route('pra-registrasi.send-client', ['investigasi' => '__ID__']) }}";
     const COMPLETE_URL_TEMPLATE = "{{ route('pra-registrasi.complete', ['investigasi' => '__ID__']) }}";
+    const TEMUAN_URL_TEMPLATE = "{{ route('pra-registrasi.temuan', ['investigasi' => '__ID__']) }}";
     const REFERENCES_URL = "{{ route('references.index') }}";
+    const LOCATION_API_URL = 'https://www.emsifa.com/api-wilayah-indonesia/api';
 
     const CSRF_TOKEN = document
         .querySelector('meta[name="csrf-token"]')
         .getAttribute('content');
+
+    const locationRequests = new Map();
+    let provinceOptionsPromise = null;
+
+    async function fetchLocationOptions(path) {
+        const url = `${LOCATION_API_URL}/${path}.json`;
+        if (!locationRequests.has(url)) {
+            locationRequests.set(url, fetch(url, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(async response => {
+                if (!response.ok) {
+                    throw new Error(`Layanan wilayah gagal merespons (${response.status}).`);
+                }
+
+                const items = await response.json();
+                if (!Array.isArray(items)) {
+                    throw new Error('Format data wilayah tidak valid.');
+                }
+
+                return items;
+            }).catch(error => {
+                locationRequests.delete(url);
+                throw error;
+            }));
+        }
+
+        return locationRequests.get(url);
+    }
+
+    function resetLocationSelect(id, placeholder, disabled = true) {
+        const select = document.getElementById(id);
+        select.dataset.requestSequence = String(Number(select.dataset.requestSequence ?? 0) + 1);
+        select.replaceChildren(new Option(placeholder, ''));
+        select.disabled = disabled;
+    }
+
+    function populateLocationSelect(id, placeholder, items) {
+        const select = document.getElementById(id);
+        resetLocationSelect(id, placeholder);
+
+        items.forEach(item => {
+            const option = new Option(item.name, item.name);
+            option.dataset.regionId = item.id;
+            select.add(option);
+        });
+
+        select.disabled = false;
+    }
+
+    async function loadLocationProvinces() {
+        if (!provinceOptionsPromise) {
+            provinceOptionsPromise = fetchLocationOptions('provinces').then(items => {
+                ['create', 'edit'].forEach(prefix => {
+                    populateLocationSelect(
+                        `${prefix}_alamat_provinsi`,
+                        'Pilih Provinsi',
+                        items
+                    );
+                });
+            }).catch(error => {
+                provinceOptionsPromise = null;
+                ['create', 'edit'].forEach(prefix => {
+                    resetLocationSelect(`${prefix}_alamat_provinsi`, 'Gagal memuat provinsi');
+                });
+                throw error;
+            });
+        }
+
+        return provinceOptionsPromise;
+    }
+
+    function getSelectedRegionId(id) {
+        return document.getElementById(id).selectedOptions[0]?.dataset.regionId ?? '';
+    }
+
+    function selectLocationByName(id, name) {
+        const select = document.getElementById(id);
+        const normalizedName = String(name ?? '').trim().toLocaleLowerCase();
+        let option = Array.from(select.options).find(item =>
+            item.value.trim().toLocaleLowerCase() === normalizedName
+        );
+
+        if (!option && normalizedName !== '') {
+            option = new Option(String(name), String(name));
+            select.add(option);
+        }
+
+        select.value = option?.value ?? '';
+        if (normalizedName !== '') {
+            select.disabled = false;
+        }
+        return getSelectedRegionId(id);
+    }
+
+    async function loadLocationCities(prefix, provinceId) {
+        const cityId = `${prefix}_alamat_kabupaten`;
+        const districtId = `${prefix}_alamat_kecamatan`;
+        resetLocationSelect(cityId, 'Memuat kota/kabupaten...');
+        resetLocationSelect(districtId, 'Pilih kota/kabupaten terlebih dahulu');
+
+        if (!provinceId) {
+            resetLocationSelect(cityId, 'Pilih provinsi terlebih dahulu');
+            return;
+        }
+
+        const requestSequence = document.getElementById(cityId).dataset.requestSequence;
+        try {
+            const items = await fetchLocationOptions(`regencies/${provinceId}`);
+            if (document.getElementById(cityId).dataset.requestSequence === requestSequence) {
+                populateLocationSelect(cityId, 'Pilih Kota/Kabupaten', items);
+            }
+        } catch (error) {
+            if (document.getElementById(cityId).dataset.requestSequence === requestSequence) {
+                throw error;
+            }
+        }
+    }
+
+    async function loadLocationDistricts(prefix, cityIdValue) {
+        const districtId = `${prefix}_alamat_kecamatan`;
+        resetLocationSelect(districtId, 'Memuat kecamatan...');
+
+        if (!cityIdValue) {
+            resetLocationSelect(districtId, 'Pilih kota/kabupaten terlebih dahulu');
+            return;
+        }
+
+        const requestSequence = document.getElementById(districtId).dataset.requestSequence;
+        try {
+            const items = await fetchLocationOptions(`districts/${cityIdValue}`);
+            if (document.getElementById(districtId).dataset.requestSequence === requestSequence) {
+                populateLocationSelect(districtId, 'Pilih Kecamatan', items);
+            }
+        } catch (error) {
+            if (document.getElementById(districtId).dataset.requestSequence === requestSequence) {
+                throw error;
+            }
+        }
+    }
+
+    async function restoreLocationSelections(prefix, investigasi) {
+        await loadLocationProvinces();
+
+        const provinceId = selectLocationByName(
+            `${prefix}_alamat_provinsi`,
+            investigasi.alamat_provinsi
+        );
+        if (!provinceId) {
+            selectLocationByName(`${prefix}_alamat_kabupaten`, investigasi.alamat_kabupaten);
+            selectLocationByName(`${prefix}_alamat_kecamatan`, investigasi.alamat_kecamatan);
+            return;
+        }
+
+        await loadLocationCities(prefix, provinceId);
+        const cityId = selectLocationByName(
+            `${prefix}_alamat_kabupaten`,
+            investigasi.alamat_kabupaten
+        );
+        if (cityId) {
+            await loadLocationDistricts(prefix, cityId);
+        }
+        selectLocationByName(`${prefix}_alamat_kecamatan`, investigasi.alamat_kecamatan);
+    }
+
+    ['create', 'edit'].forEach(prefix => {
+        document.getElementById(`${prefix}_alamat_provinsi`).addEventListener('change', async event => {
+            try {
+                await loadLocationCities(prefix, getSelectedRegionId(event.target.id));
+            } catch (error) {
+                resetLocationSelect(`${prefix}_alamat_kabupaten`, 'Gagal memuat kota/kabupaten');
+                resetLocationSelect(`${prefix}_alamat_kecamatan`, 'Pilih kota/kabupaten terlebih dahulu');
+                showToast(`Data kota/kabupaten gagal dimuat: ${error.message}`, 'error');
+            }
+        });
+
+        document.getElementById(`${prefix}_alamat_kabupaten`).addEventListener('change', async event => {
+            try {
+                await loadLocationDistricts(prefix, getSelectedRegionId(event.target.id));
+            } catch (error) {
+                resetLocationSelect(`${prefix}_alamat_kecamatan`, 'Gagal memuat kecamatan');
+                showToast(`Data kecamatan gagal dimuat: ${error.message}`, 'error');
+            }
+        });
+    });
 
 
     /* =========================
@@ -2044,30 +2261,39 @@
         asuransis: [],
         jenis_claims: [],
         investigators: [],
-        matauangs: []
+        matauangs: [],
+        users: []
     };
+    let referenceLoadPromise = null;
 
-    async function loadReferences() {
-        try {
-            const response = await fetch(REFERENCES_URL, {
-                headers: {
-                    'Accept': 'application/json'
+    function loadReferences() {
+        if (!referenceLoadPromise) {
+            referenceLoadPromise = (async () => {
+                try {
+                    const response = await fetch(REFERENCES_URL, {
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    const result = await response.json();
+
+                    if (!response.ok || !result.success) {
+                        throw new Error(result.message ?? 'Gagal mengambil data referensi.');
+                    }
+
+                    referenceData = result.data ?? referenceData;
+                    fillReferenceSelects();
+
+                } catch (error) {
+                    referenceLoadPromise = null;
+                    console.error('Reference error:', error);
+                    showToast('Data referensi gagal dimuat: ' + error.message, 'error');
                 }
-            });
-
-            const result = await response.json();
-
-            if (!response.ok || !result.success) {
-                throw new Error(result.message ?? 'Gagal mengambil data referensi.');
-            }
-
-            referenceData = result.data ?? referenceData;
-            fillReferenceSelects();
-
-        } catch (error) {
-            console.error('Reference error:', error);
-            showToast('Data referensi gagal dimuat: ' + error.message, 'error');
+            })();
         }
+
+        return referenceLoadPromise;
     }
 
     function setSelectOptions(id, placeholder, items, valueKey, labelBuilder) {
@@ -2131,6 +2357,16 @@
                 referenceData.matauangs ?? [],
                 'matauang',
                 item => item.matauang
+            );
+        });
+
+        ['create_pic', 'edit_pic'].forEach(id => {
+            setSelectOptions(
+                id,
+                'Pilih PIC',
+                referenceData.users ?? [],
+                'id',
+                item => `${item.name} (${item.id})`
             );
         });
     }
@@ -2320,7 +2556,6 @@
                     </td>
 
                     <td>
-
                         <span class="sent-badge ${Number(item.status_sent_client) === 1 ? 'sent-yes' : 'sent-no'}">
                             ${
                                 Number(
@@ -2333,6 +2568,14 @@
                             }
                         </span>
 
+                    </td>
+
+                    <td>
+                        ${
+                            Number(item.temuan) === 1
+                                ? '<span class="sent-badge sent-yes">Temuan</span>'
+                                : `<button class="btn-sm btn-submit" onclick="markTemuan(${item.id}, this)">Temuan</button>`
+                        }
                     </td>
 
                     <td>
@@ -2450,6 +2693,13 @@
 
     const createForm =
         document.getElementById('createForm');
+
+    createForm.addEventListener('reset', () => {
+        setTimeout(() => {
+            resetLocationSelect('create_alamat_kabupaten', 'Pilih provinsi terlebih dahulu');
+            resetLocationSelect('create_alamat_kecamatan', 'Pilih kota/kabupaten terlebih dahulu');
+        });
+    });
 
     const createAsuransiSelect =
         document.getElementById('create_asuransi_id');
@@ -2818,6 +3068,7 @@
                 ['Agen Terlibat', item.agen_terlibat],
                 ['Status', statusLabel(item.status)],
                 ['Kirim Client', Number(item.status_sent_client) === 1 ? 'Sudah dikirim' : 'Belum dikirim'],
+                ['Temuan', Number(item.temuan) === 1 ? 'Ya (1)' : 'Tidak (0)'],
                 ['Alamat Tertanggung', item.alamat_tertanggung],
                 ['Informasi Lain', item.informasi_lain],
                 ['Kronologi Singkat', item.kronologi_singkat],
@@ -2855,52 +3106,36 @@
             }
 
             document.getElementById('editId').value = item.id;
-            document.getElementById('edit_number_case').value = item.number_case ?? '';
-            document.getElementById('edit_tgl_registrasi').value = item.tgl_registrasi ?? '';
-            document.getElementById('edit_tgl_kirim_laporan').value = item.tgl_kirim_laporan ?? '';
-            document.getElementById('edit_no_polis').value = item.no_polis ?? '';
-            document.getElementById('edit_nm_tertanggung').value = item.nm_tertanggung ?? '';
-            document.getElementById('edit_nm_pemegang_polis').value = item.nm_pemegang_polis ?? '';
-            document.getElementById('edit_nm_agen').value = item.nm_agen ?? '';
-
-            // Pastikan option reference sudah tersedia sebelum memilih nilai data lama.
+            await loadReferences();
             fillReferenceSelects();
-            document.getElementById('edit_asuransi_id').value = item.asuransi_id ?? '';
-            document.getElementById('edit_jenisclaim_id').value = item.jenisclaim_id ?? '';
-            document.getElementById('edit_investigator_id').value = item.investigator_id ?? '';
-            document.getElementById('edit_matauang').value = item.matauang ?? '';
+            const editForm = document.getElementById('editForm');
+            const locationFields = new Set([
+                'alamat_provinsi',
+                'alamat_kabupaten',
+                'alamat_kecamatan',
+            ]);
 
-            document.getElementById('edit_alamat_tertanggung').value = item.alamat_tertanggung ?? '';
-            document.getElementById('edit_informasi_lain').value = item.informasi_lain ?? '';
-            document.getElementById('edit_kronologi_singkat').value = item.kronologi_singkat ?? '';
+            Array.from(editForm.elements).forEach(field => {
+                if (!field.name || locationFields.has(field.name)) {
+                    return;
+                }
 
-            document.getElementById('edit_uang_pertanggungan').value = item.uang_pertanggungan ?? '';
-            document.getElementById('edit_premi').value = item.premi ?? '';
-            document.getElementById('edit_total_premi').value = item.total_premi ?? '';
-            document.getElementById('edit_jml_klaim').value = item.jml_klaim ?? '';
-            document.getElementById('edit_pekerjaan').value = item.pekerjaan ?? '';
-            document.getElementById('edit_pengaju_klaim').value = item.pengaju_klaim ?? '';
-            document.getElementById('edit_usia_polis').value = item.usia_polis ?? '';
-            document.getElementById('edit_tgl_spaj').value = item.tgl_spaj ?? '';
-            document.getElementById('edit_tgl_efektif_polis').value = item.tgl_efektif_polis ?? '';
-            document.getElementById('edit_alamat_provinsi').value = item.alamat_provinsi ?? '';
-            document.getElementById('edit_alamat_kabupaten').value = item.alamat_kabupaten ?? '';
-            document.getElementById('edit_alamat_kecamatan').value = item.alamat_kecamatan ?? '';
-            document.getElementById('edit_provinsi').value = item.provinsi ?? '';
-            document.getElementById('edit_area_investigasi').value = item.area_investigasi ?? '';
-            document.getElementById('edit_rumah_sakit').value = item.rumah_sakit ?? '';
-            document.getElementById('edit_diagnosa_utama').value = item.diagnosa_utama ?? '';
-            document.getElementById('edit_tempat_meninggal').value = item.tempat_meninggal ?? '';
-            document.getElementById('edit_tgl_meninggal').value = item.tgl_meninggal ?? '';
-            document.getElementById('edit_tgl_dirawat_dr').value = item.tgl_dirawat_dr ?? '';
-            document.getElementById('edit_tgl_dirawat_smp').value = item.tgl_dirawat_smp ?? '';
-            document.getElementById('edit_kepemilikan_asuransi_lain').value = item.kepemilikan_asuransi_lain ?? '';
-            document.getElementById('edit_investigasi_fee').value = item.investigasi_fee ?? '';
-            document.getElementById('edit_tgl_kirim_dokumen').value = item.tgl_kirim_dokumen ?? '';
-            document.getElementById('edit_agen_terlibat').value = item.agen_terlibat ?? '';
-            document.getElementById('edit_metode_investigasi').value = item.metode_investigasi ?? '';
-            document.getElementById('edit_tambahan_waktu').value = item.tambahan_waktu ?? '';
-            document.getElementById('edit_plan').value = item.plan ?? '';
+                const value = field.name === 'pic' ? item.user_id : item[field.name];
+                field.value = value == null ?
+                    '' :
+                    field.type === 'date' ?
+                    String(value).slice(0, 10) :
+                    value;
+            });
+
+            try {
+                await restoreLocationSelections('edit', item);
+            } catch (error) {
+                showToast(`Data wilayah gagal dimuat: ${error.message}`, 'error');
+                selectLocationByName('edit_alamat_provinsi', item.alamat_provinsi);
+                selectLocationByName('edit_alamat_kabupaten', item.alamat_kabupaten);
+                selectLocationByName('edit_alamat_kecamatan', item.alamat_kecamatan);
+            }
 
             document.getElementById('editErrors').classList.remove('active');
             openOverlay(editModal);
@@ -3071,6 +3306,35 @@
         );
     }
 
+    async function markTemuan(id, button) {
+        if (button) {
+            button.disabled = true;
+        }
+
+        try {
+            const response = await fetch(routeWithId(TEMUAN_URL_TEMPLATE, id), {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': CSRF_TOKEN
+                }
+            });
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.message ?? 'Gagal menandai data sebagai temuan.');
+            }
+
+            showToast(result.message, 'success');
+            await loadData(currentPage, currentSearch);
+        } catch (error) {
+            if (button) {
+                button.disabled = false;
+            }
+            showToast(error.message, 'error');
+        }
+    }
+
     async function completeData(id) {
         await runWorkflowAction(
             routeWithId(COMPLETE_URL_TEMPLATE, id),
@@ -3105,7 +3369,10 @@
     document.addEventListener('DOMContentLoaded', async () => {
         await Promise.all([
             loadReferences(),
-            loadData()
+            loadData(),
+            loadLocationProvinces().catch(error => {
+                showToast(`Data provinsi gagal dimuat: ${error.message}`, 'error');
+            })
         ]);
     });
     </script>

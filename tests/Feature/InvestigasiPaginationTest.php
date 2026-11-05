@@ -49,4 +49,16 @@ class InvestigasiPaginationTest extends TestCase
         $this->assertCount(2, $json['data']);
         $this->assertSame(10, $json['pagination']['per_page']);
     }
+
+    public function test_store_rules_accept_pic_field_from_users_table(): void
+    {
+        $controller = new InvestigasiController();
+        $method = new \ReflectionMethod($controller, 'rules');
+        $method->setAccessible(true);
+
+        $rules = $method->invoke($controller);
+
+        $this->assertArrayHasKey('pic', $rules);
+        $this->assertSame('nullable|integer|exists:users,id', $rules['pic']);
+    }
 }

@@ -149,6 +149,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/pra-registrasi/{investigasi}/submit', [InvestigasiController::class, 'submit'])
         ->name('pra-registrasi.submit');
 
+    Route::post('/pra-registrasi/{investigasi}/temuan', [InvestigasiController::class, 'markTemuan'])
+        ->name('pra-registrasi.temuan');
+
 
     /*
     |--------------------------------------------------------------------------

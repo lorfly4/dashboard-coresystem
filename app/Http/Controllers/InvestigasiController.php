@@ -68,6 +68,7 @@ class InvestigasiController extends Controller
 
         $asuransiId = $request->input('asuransi_id');
         $numberCase = $this->generateNumberCase();
+        $picUserId = $request->input('pic');
 
         $investigasi = new Investigasi();
 
@@ -115,7 +116,7 @@ class InvestigasiController extends Controller
         $investigasi->plan = $request->input('plan');
         $investigasi->status = 0;
         $investigasi->status_sent_client = 0;
-        $investigasi->user_id = Auth::id();
+        $investigasi->user_id = $picUserId ?: Auth::id();
 
         $investigasi->save();
 
@@ -167,8 +168,14 @@ class InvestigasiController extends Controller
         unset(
             $validated['status'],
             $validated['status_sent_client'],
-            $validated['user_id_approve']
+            $validated['user_id_approve'],
+            $validated['pic']
         );
+
+        $picUserId = $request->input('pic');
+        if ($picUserId !== null && $picUserId !== '') {
+            $validated['user_id'] = (int) $picUserId;
+        }
 
         $investigasi->update($validated);
 
@@ -285,6 +292,24 @@ class InvestigasiController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Data berhasil ditandai sebagai sudah dikirim ke client.',
+            'data' => $investigasi->fresh(),
+        ]);
+    }
+
+    /**
+     * Menandai investigasi sebagai memiliki temuan.
+     */
+    public function markTemuan(Investigasi $investigasi)
+    {
+        if ((int) $investigasi->temuan !== 1) {
+            $investigasi->update([
+                'temuan' => 1,
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil ditandai sebagai temuan.',
             'data' => $investigasi->fresh(),
         ]);
     }
@@ -432,6 +457,7 @@ class InvestigasiController extends Controller
             'metode_investigasi' => 'nullable|string',
             'agen_terlibat' => 'nullable|string|max:50',
             'plan' => 'nullable|string',
+            'pic' => 'nullable|integer|exists:users,id',
         ];
     }
 }

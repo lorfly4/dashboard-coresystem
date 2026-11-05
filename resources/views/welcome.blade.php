@@ -229,6 +229,28 @@
             margin-bottom: 22px;
         }
 
+        .remember-row {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin: -4px 0 18px;
+        }
+
+        .remember-row input {
+            width: 16px;
+            height: 16px;
+            margin: 0;
+            padding: 0;
+            accent-color: #6366f1;
+        }
+
+        .remember-row label {
+            margin: 0;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
         label {
             display: block;
 
@@ -547,6 +569,16 @@
 
             </div>
 
+            <div class="remember-row">
+                <input
+                    type="checkbox"
+                    id="remember"
+                    name="remember"
+                    value="1"
+                    {{ old('remember') ? 'checked' : '' }}
+                >
+                <label for="remember">Ingat saya di perangkat ini</label>
+            </div>
 
             <!-- Login Button -->
 

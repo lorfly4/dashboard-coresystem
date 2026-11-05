@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('investigasis', function (Blueprint $table) {
-            $table->date('tgl_kirim_laporan')->nullable()->after('tgl_registrasi');
-        });
+        if (!Schema::hasColumn('investigasis', 'tgl_kirim_laporan')) {
+            Schema::table('investigasis', function (Blueprint $table) {
+                $table->date('tgl_kirim_laporan')->nullable()->after('tgl_registrasi');
+            });
+        }
     }
 
     /**
@@ -21,8 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('investigasis', function (Blueprint $table) {
-            $table->dropColumn('tgl_kirim_laporan');
-        });
+        if (Schema::hasColumn('investigasis', 'tgl_kirim_laporan')) {
+            Schema::table('investigasis', function (Blueprint $table) {
+                $table->dropColumn('tgl_kirim_laporan');
+            });
+        }
     }
 };

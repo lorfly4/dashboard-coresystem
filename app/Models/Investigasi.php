@@ -76,7 +76,12 @@ class Investigasi extends Model
         'user_id',
         'status',
         'status_sent_client',
+        'temuan',
         'user_id_approve',
+    ];
+
+    protected $casts = [
+        'temuan' => 'integer',
     ];
 
     public function asuransi()

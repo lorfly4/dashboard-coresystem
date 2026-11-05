@@ -23,7 +23,7 @@ class AuthController extends Controller
             'email' => $credentials['email'],
             'password' => $credentials['password'],
             'active' => 1,
-        ])) {
+        ], $request->boolean('remember'))) {
             $request->session()->regenerate();
 
             return redirect()->intended('/dashboard');
