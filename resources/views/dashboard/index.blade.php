@@ -1160,7 +1160,7 @@
 
 
                 <!-- SF -->
-                <a href="http://localhost:3002" class="app-card" data-name="sf" target="_blank"
+                <a href="http://31.97.199.58:3002" class="app-card" data-name="sf" target="_blank"
                     rel="noopener noreferrer">
 
                     <div class="coming">

@@ -19,7 +19,7 @@ class SSOController extends Controller
         $token = JWTAuth::fromUser($user);
 
         // 3. Alihkan (redirect) user ke url callback Express Anda (port 3002)
-        $expressUrl = "http://localhost:3002/sso/callback";
+        $expressUrl = "http://31.97.199.58:3002/sso/callback";
 
         return redirect($expressUrl . '?token=' . $token);
     }
