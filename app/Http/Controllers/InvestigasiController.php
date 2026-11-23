@@ -67,58 +67,61 @@ class InvestigasiController extends Controller
         $validated = $request->validate($this->rules());
 
         $asuransiId = $request->input('asuransi_id');
-        $numberCase = $this->generateNumberCase();
         $picUserId = $request->input('pic');
 
-        $investigasi = new Investigasi();
+        $investigasi = DB::transaction(function () use ($request, $asuransiId, $picUserId) {
+            $investigasi = new Investigasi();
 
-        $investigasi->no_case = $this->generateNoCase($asuransiId, $numberCase);
-        $investigasi->number_case = $numberCase;
-        $investigasi->tgl_registrasi = $request->input('tgl_registrasi');
-        $investigasi->tgl_kirim_laporan = $request->input('tgl_kirim_laporan');
-        $investigasi->asuransi_id = $request->input('asuransi_id');
-        $investigasi->no_polis = $request->input('no_polis');
-        $investigasi->nm_tertanggung = $request->input('nm_tertanggung');
-        $investigasi->nm_pemegang_polis = $request->input('nm_pemegang_polis');
-        $investigasi->nm_agen = $request->input('nm_agen');
-        $investigasi->uang_pertanggungan = $request->input('uang_pertanggungan');
-        $investigasi->alamat_provinsi = $request->input('alamat_provinsi');
-        $investigasi->alamat_kabupaten = $request->input('alamat_kabupaten');
-        $investigasi->alamat_kecamatan = $request->input('alamat_kecamatan');
-        $investigasi->alamat_tertanggung = $request->input('alamat_tertanggung');
-        $investigasi->tgl_spaj = $request->input('tgl_spaj');
-        $investigasi->tgl_efektif_polis = $request->input('tgl_efektif_polis');
-        $investigasi->usia_polis = $request->input('usia_polis');
-        $investigasi->pekerjaan = $request->input('pekerjaan');
-        $investigasi->matauang = $request->input('matauang');
-        $investigasi->premi = $request->input('premi');
-        $investigasi->total_premi = $request->input('total_premi');
-        $investigasi->jml_klaim = $request->input('jml_klaim');
-        $investigasi->tempat_meninggal = $request->input('tempat_meninggal');
-        $investigasi->tgl_meninggal = $request->input('tgl_meninggal');
-        $investigasi->diagnosa_utama = $request->input('diagnosa_utama');
-        $investigasi->tgl_dirawat_dr = $request->input('tgl_dirawat_dr');
-        $investigasi->tgl_dirawat_smp = $request->input('tgl_dirawat_smp');
-        $investigasi->jenisclaim_id = $request->input('jenisclaim_id');
-        $investigasi->rumah_sakit = $request->input('rumah_sakit');
-        $investigasi->area_investigasi = $request->input('area_investigasi');
-        $investigasi->provinsi = $request->input('provinsi');
-        $investigasi->kepemilikan_asuransi_lain = $request->input('kepemilikan_asuransi_lain');
-        $investigasi->investigasi_fee = $request->input('investigasi_fee');
-        $investigasi->investigator_id = $request->input('investigator_id');
-        $investigasi->informasi_lain = $request->input('informasi_lain');
-        $investigasi->tgl_kirim_dokumen = $request->input('tgl_kirim_dokumen');
-        $investigasi->tambahan_waktu = $request->input('tambahan_waktu');
-        $investigasi->pengaju_klaim = $request->input('pengaju_klaim');
-        $investigasi->kronologi_singkat = $request->input('kronologi_singkat');
-        $investigasi->metode_investigasi = $request->input('metode_investigasi');
-        $investigasi->agen_terlibat = $request->input('agen_terlibat');
-        $investigasi->plan = $request->input('plan');
-        $investigasi->status = 0;
-        $investigasi->status_sent_client = 0;
-        $investigasi->user_id = $picUserId ?: Auth::id();
+            $investigasi->no_case = $this->generateNoCase($asuransiId);
+            $investigasi->number_case = $this->generateNumberCase();
+            $investigasi->tgl_registrasi = $request->input('tgl_registrasi');
+            $investigasi->tgl_kirim_laporan = $request->input('tgl_kirim_laporan');
+            $investigasi->asuransi_id = $request->input('asuransi_id');
+            $investigasi->no_polis = $request->input('no_polis');
+            $investigasi->nm_tertanggung = $request->input('nm_tertanggung');
+            $investigasi->nm_pemegang_polis = $request->input('nm_pemegang_polis');
+            $investigasi->nm_agen = $request->input('nm_agen');
+            $investigasi->uang_pertanggungan = $request->input('uang_pertanggungan');
+            $investigasi->alamat_provinsi = $request->input('alamat_provinsi');
+            $investigasi->alamat_kabupaten = $request->input('alamat_kabupaten');
+            $investigasi->alamat_kecamatan = $request->input('alamat_kecamatan');
+            $investigasi->alamat_tertanggung = $request->input('alamat_tertanggung');
+            $investigasi->tgl_spaj = $request->input('tgl_spaj');
+            $investigasi->tgl_efektif_polis = $request->input('tgl_efektif_polis');
+            $investigasi->usia_polis = $request->input('usia_polis');
+            $investigasi->pekerjaan = $request->input('pekerjaan');
+            $investigasi->matauang = $request->input('matauang');
+            $investigasi->premi = $request->input('premi');
+            $investigasi->total_premi = $request->input('total_premi');
+            $investigasi->jml_klaim = $request->input('jml_klaim');
+            $investigasi->tempat_meninggal = $request->input('tempat_meninggal');
+            $investigasi->tgl_meninggal = $request->input('tgl_meninggal');
+            $investigasi->diagnosa_utama = $request->input('diagnosa_utama');
+            $investigasi->tgl_dirawat_dr = $request->input('tgl_dirawat_dr');
+            $investigasi->tgl_dirawat_smp = $request->input('tgl_dirawat_smp');
+            $investigasi->jenisclaim_id = $request->input('jenisclaim_id');
+            $investigasi->rumah_sakit = $request->input('rumah_sakit');
+            $investigasi->area_investigasi = $request->input('area_investigasi');
+            $investigasi->provinsi = $request->input('provinsi');
+            $investigasi->kepemilikan_asuransi_lain = $request->input('kepemilikan_asuransi_lain');
+            $investigasi->investigasi_fee = $request->input('investigasi_fee');
+            $investigasi->investigator_id = $request->input('investigator_id');
+            $investigasi->informasi_lain = $request->input('informasi_lain');
+            $investigasi->tgl_kirim_dokumen = $request->input('tgl_kirim_dokumen');
+            $investigasi->tambahan_waktu = $request->input('tambahan_waktu');
+            $investigasi->pengaju_klaim = $request->input('pengaju_klaim');
+            $investigasi->kronologi_singkat = $request->input('kronologi_singkat');
+            $investigasi->metode_investigasi = $request->input('metode_investigasi');
+            $investigasi->agen_terlibat = $request->input('agen_terlibat');
+            $investigasi->plan = $request->input('plan');
+            $investigasi->status = 0;
+            $investigasi->status_sent_client = 0;
+            $investigasi->user_id = $picUserId ?: Auth::id();
 
-        $investigasi->save();
+            $investigasi->save();
+
+            return $investigasi;
+        });
 
         return response()->json([
             'success' => true,
@@ -169,7 +172,8 @@ class InvestigasiController extends Controller
             $validated['status'],
             $validated['status_sent_client'],
             $validated['user_id_approve'],
-            $validated['pic']
+            $validated['pic'],
+            $validated['number_case']
         );
 
         $picUserId = $request->input('pic');
@@ -347,28 +351,20 @@ class InvestigasiController extends Controller
     }
 
     /**
-     * Generate nomor case (sequence) otomatis.
-     *
-     * Sequence = jumlah total data investigasi yang sudah ada + 1
-     * (COUNT(*), bukan berdasarkan id ataupun MAX(number_case)), dan
-     * berlaku global untuk semua asuransi.
+     * Generate sequence number for number_case.
      */
     public function generateNumberCase(): int
     {
-        $totalData = DB::table('investigasis')->count();
-
-        return $totalData + 1;
+        return DB::table('investigasis')->count() + 1;
     }
 
     /**
      * Generate no_case otomatis.
      *
-     * Format: {KD_PERUSAHAAN}/{BULAN}.{TAHUN}/{SEQUENCE}
-     * - Prefix diambil dari kd_perusahaan asuransi.
-     * - Sequence adalah nomor urut dari generateNumberCase() (jumlah data + 1),
-     *   ditempel di paling belakang.
+     * Format: {KD_PERUSAHAAN}/{BULAN}.{TAHUN}/
+     * Prefix diambil dari kd_perusahaan asuransi.
      */
-    public function generateNoCase($asuransiId = null, int $numberCase = 1): string
+    public function generateNoCase($asuransiId = null): string
     {
         $prefix = 'ASURANSI';
 
@@ -383,17 +379,7 @@ class InvestigasiController extends Controller
         $month = date('n');
         $year = date('Y');
 
-        return sprintf('%s/%s.%s/%d', $prefix, $month, $year, $numberCase);
-    }
-
-    public function nextNumberCase(Request $request)
-    {
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'number_case' => $this->generateNumberCase(),
-            ],
-        ]);
+        return sprintf('%s/%s.%s/', $prefix, $month, $year);
     }
 
     /**

@@ -110,10 +110,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/pra-registrasi/data', [InvestigasiController::class, 'data'])
         ->name('pra-registrasi.data');
 
-    Route::get('/pra-registrasi/next-number-case', [InvestigasiController::class, 'nextNumberCase'])
-        ->name('pra-registrasi.next-number-case');
-
-
     /*
     |--------------------------------------------------------------------------
     | CRUD Pra Registrasi

@@ -1481,10 +1481,8 @@
 
                     <div class="form-group">
                         <label>Number Case</label>
-
-                        <input type="text" name="number_case" class="form-control" placeholder="Contoh: 1">
+                        <input type="text" name="no_case" id="create_no_case" class="form-control" readonly>
                     </div>
-
 
                     <div class="form-group">
                         <label>Tanggal Registrasi</label>
@@ -1834,8 +1832,6 @@
             <form id="editForm">
                 <input type="hidden" id="editId">
                 <div class="form-grid">
-                    <div class="form-group"><label>Number Case</label><input type="number" name="number_case"
-                            id="edit_number_case" class="form-control"></div>
                     <div class="form-group"><label>Tanggal Registrasi</label><input type="date" name="tgl_registrasi"
                             id="edit_tgl_registrasi" class="form-control"></div>
                     <div class="form-group"><label>Tanggal Kirim Laporan</label><input type="date" name="tgl_kirim_laporan"
@@ -2704,6 +2700,22 @@
     const createAsuransiSelect =
         document.getElementById('create_asuransi_id');
 
+    const createNoCaseInput =
+        document.getElementById('create_no_case');
+
+    function updateCreateNoCase() {
+        const asuransi = (referenceData.asuransis ?? []).find(
+            item => String(item.id) === createAsuransiSelect.value
+        );
+        const prefix = asuransi?.kd_perusahaan?.trim();
+
+        createNoCaseInput.value = prefix ?
+            `${prefix}/${new Date().getMonth() + 1}.${new Date().getFullYear()}/` :
+            '';
+    }
+
+    createAsuransiSelect.addEventListener('change', updateCreateNoCase);
+
     const openCreateModal =
         document.getElementById('openCreateModal');
 
@@ -2732,42 +2744,10 @@
     }
 
 
-    async function refreshNextNumberCase() {
-        // number_case sekarang berupa counter global (mengikuti logic
-        // InvestigasiControllerraise.php), jadi tidak lagi difilter
-        // berdasarkan asuransi_id.
-        const numberCaseInput = createForm.querySelector('input[name="number_case"]');
-        if (!numberCaseInput) return;
-
-        try {
-            const url = new URL('{{ route('pra-registrasi.next-number-case') }}', window.location.origin);
-
-            const response = await fetch(url.toString(), {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': CSRF_TOKEN
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Gagal mengambil nomor case berikutnya.');
-            }
-
-            const result = await response.json();
-            const nextNumber = Number(result?.data?.number_case ?? 1);
-            numberCaseInput.value = Number.isFinite(nextNumber) ? nextNumber : 1;
-        } catch (error) {
-            console.error(error);
-            numberCaseInput.value = '';
-        }
-    }
-
     openCreateModal.addEventListener(
         'click',
         function () {
             openModal();
-            refreshNextNumberCase();
         }
     );
 

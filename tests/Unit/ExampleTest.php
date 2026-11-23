@@ -29,11 +29,10 @@ class ExampleTest extends TestCase
         $this->assertContains(strtolower('MASTER'), ['spv', 'master']);
     }
 
-    public function test_generate_number_case_for_selected_insurer(): void
+    public function test_generated_no_case_ends_with_sequence_separator(): void
     {
         $controller = $this->app->make(InvestigasiController::class);
 
-        $this->assertIsInt($controller->generateNumberCaseForAsuransi(999));
-        $this->assertSame('ASURANSI/' . date('n') . '.' . date('Y') . '/1', $controller->generateNoCase(null, 1));
+        $this->assertSame('ASURANSI/' . date('n') . '.' . date('Y') . '/', $controller->generateNoCase());
     }
 }
