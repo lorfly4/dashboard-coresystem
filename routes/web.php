@@ -148,6 +148,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/pra-registrasi/{investigasi}/temuan', [InvestigasiController::class, 'markTemuan'])
         ->name('pra-registrasi.temuan');
 
+    Route::post('/pra-registrasi/{investigasi}/temuan/cancel', [InvestigasiController::class, 'cancelTemuan'])
+        ->name('pra-registrasi.cancel-temuan');
+
 
     /*
     |--------------------------------------------------------------------------

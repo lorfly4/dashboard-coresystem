@@ -319,6 +319,24 @@ class InvestigasiController extends Controller
     }
 
     /**
+     * Membatalkan penandaan investigasi sebagai temuan.
+     */
+    public function cancelTemuan(Investigasi $investigasi)
+    {
+        if ((int) $investigasi->temuan === 1) {
+            $investigasi->update([
+                'temuan' => 0,
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status temuan berhasil dibatalkan.',
+            'data' => $investigasi->fresh(),
+        ]);
+    }
+
+    /**
      * Menyelesaikan proses.
      *
      * Approve / Done + sudah dikirim -> Selesai (2)

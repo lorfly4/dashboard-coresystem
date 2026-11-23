@@ -2055,6 +2055,7 @@
     const SEND_CLIENT_URL_TEMPLATE = "{{ route('pra-registrasi.send-client', ['investigasi' => '__ID__']) }}";
     const COMPLETE_URL_TEMPLATE = "{{ route('pra-registrasi.complete', ['investigasi' => '__ID__']) }}";
     const TEMUAN_URL_TEMPLATE = "{{ route('pra-registrasi.temuan', ['investigasi' => '__ID__']) }}";
+    const CANCEL_TEMUAN_URL_TEMPLATE = "{{ route('pra-registrasi.cancel-temuan', ['investigasi' => '__ID__']) }}";
     const REFERENCES_URL = "{{ route('references.index') }}";
     const LOCATION_API_URL = 'https://www.emsifa.com/api-wilayah-indonesia/api';
 
@@ -2569,7 +2570,8 @@
                     <td>
                         ${
                             Number(item.temuan) === 1
-                                ? '<span class="sent-badge sent-yes">Temuan</span>'
+                                ? `<span class="sent-badge sent-yes">Temuan</span>
+                                    <button class="btn-sm btn-delete" onclick="cancelTemuan(${item.id})">Batalkan</button>`
                                 : `<button class="btn-sm btn-submit" onclick="markTemuan(${item.id}, this)">Temuan</button>`
                         }
                     </td>
@@ -3313,6 +3315,14 @@
             }
             showToast(error.message, 'error');
         }
+    }
+
+    async function cancelTemuan(id) {
+        await runWorkflowAction(
+            routeWithId(CANCEL_TEMUAN_URL_TEMPLATE, id),
+            'Batalkan status temuan untuk data ini?',
+            'Status temuan berhasil dibatalkan.'
+        );
     }
 
     async function completeData(id) {
